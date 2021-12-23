@@ -1,0 +1,250 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Montserrat&display=swap');
+
+body {
+    width: 310px;
+    height: 335px;
+    margin: 0px;
+    font-family: "Montserrat", sans-serif;
+    background: rgb(243, 243, 243);
+    color: #131313;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+h5 {
+    font-size: 13px;
+    font-family: Sans MS, Comic Sans, cursive;
+}
+
+/* Top Divs */
+#topDiv {
+    height: 65px;
+    width: 300px;
+    clear: both;
+    box-sizing: border-box;
+}
+
+#leftTopDiv {
+    width: 70px;
+    height: 65px;
+    float: left;
+    box-sizing: border-box;
+}
+
+#centerTopDiv {
+    width: 160px;
+    height: 65px;
+    float: left;
+    box-sizing: border-box;
+    text-align: center;
+}
+
+#rightTopDiv {
+    width: 70px;
+    height: 65px;
+    float: right;
+    box-sizing: border-box;
+}
+
+/* Middle Divs */
+#middleDiv {
+    width: 300px;
+    height: 132.5px;
+    clear: both;
+    box-sizing: border-box;
+    text-align: center;
+}
+
+#leftMiddleDiv {
+    height: 132.5px;
+    width: 70px;
+    float: left;
+    padding: 0px;
+}
+#timerDiv {
+    height: 132.5px;
+    width: 160px;
+    float: left;
+    font-size: 55px;
+    font-family: 'Roboto', sans-serif;
+    padding-bottom: 0;
+    padding-top: 0px;
+}
+#rightMiddleDiv {
+    height: 132.5px;
+    width: 70px;
+    float: right;
+}
+#timer {
+    margin-bottom: 0;
+    margin-right: 0;
+    margin-left: 0; 
+    margin-top: 0;
+    padding: 70px 0 0 0;
+}
+
+/* Bottom Divs */
+#bottomDiv {
+    height: 132.5px;
+    width: 300px;
+    clear: both;
+    box-sizing: border-box;
+    
+}
+#progress {
+    margin-left: 50px;
+    height: 20px;
+    width: 200px;
+    background-color: #d8d8d8;
+    border-radius: 20px;
+    clear: both;
+}
+#progressDone {
+    height: 20px;
+    width: 0;
+    background: linear-gradient(to left, #F2709C, #FF9472);
+    box-shadow: 0 3px 3px -5px #F2709C, 0 2px 5px #F2709C;
+    font-family: 'Montserrat', sans-serif;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 1s ease;
+}
+
+#title {
+    top: 0px;
+    vertical-align: text-top;
+    margin: 0;
+    padding: 0;
+    border: 1px solid purple;
+}
+
+.center {
+    text-align: center;
+}
+
+#mainDiv {
+    margin: 5px;
+    height: 330px;
+    border-radius: 10px;
+    background: #5f2c82;  /* fallback for old browsers */
+    background: -webkit-linear-gradient(to right, #49a09d, #5f2c82);  /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to right, #49a09d, #5f2c82); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+
+}
+
+#mainDiv2 {
+    margin: 5px;
+    height: 330px;
+    border-radius: 10px;
+    background: rgb(0,16,36);
+    background: linear-gradient(90deg, rgba(0,16,36,1) 0%, rgba(30,128,139,1) 51%, rgba(0,212,255,1) 100%);
+
+}
+
+.imgLogo {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: auto;
+}
+
+p {
+    margin-top: 40px;
+    margin-bottom: 0px;
+    margin-right: 0px;
+    margin-left: 0px;
+}
+
+#minusImg {
+    width: 25%;
+    margin-top: 90px;
+    margin-right: 19px;
+    float: right;
+}
+
+#plusImg {
+    width: 35%;
+    margin-top: 85px;
+    margin-left: 11px;
+    float: left;
+}
+
+.hidden {
+    display: none;
+}
+
+#button-group {
+    clear: both;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 15px;
+}
+
+#start {
+    width: 55px;
+    height: 45px;
+    margin-right: 20px;
+    background: rgb(48, 33, 253);
+    color: white;
+    display: inline-block;
+    border-radius: 15%;
+}
+
+#give-up {
+    width: 55px;
+    height: 45px;
+    border-radius: 15%;
+    background: rgb(250, 69, 109);
+    color: #000000;
+    display: inline-block;
+}
+
+#reset {
+    width: 55px;
+    height: 45px;
+    border-radius: 15%;
+    display: none;
+    background: rgb(131, 10, 252);
+    color: white;
+}
+
+
+#question {
+    display: none;
+    clear: both;
+    text-align: center;
+    height: 50px;
+    width: 140px;
+    color: black;
+    background-color: red;
+    margin-top: 10px;
+    margin-left: 50px;
+    margin-right: 5px;
+    margin-left: 10px;
+}
+
+#yes-giveUp {
+    background-color: #b8c6db;
+    background-image: linear-gradient(315deg, #b8c6db 0%, #f5f7fa 74%);
+    color: #131313;
+    height: 39px;
+    width: 55px;
+    border-radius: 15%;
+    display: none;
+}
+#cancel-giveUp {
+    background-color: #b8c6db;
+    background-image: linear-gradient(315deg, #b8c6db 0%, #f5f7fa 74%);
+    color: #131313;
+    height: 39px;
+    width: 57px;
+    border-radius: 15%;
+    display: none;
+}
+
+/*\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/

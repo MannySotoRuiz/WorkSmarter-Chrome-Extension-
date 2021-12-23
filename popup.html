@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" href="main.css">
+    <link rel="stylesheet" href="button.css">
+  </head>
+  <body>
+    <div id="mainDiv">
+      <div id="topDiv">
+        <div id="leftTopDiv"></div>
+        <div id="centerTopDiv">
+          <img class="imgLogo" src="/images/white_logo_transparent_background.png" alt="Work Smart Logo">
+        </div>
+        <div id="rightTopDiv">
+          <img class="imgLogo" src="/images/settings.png" alt="Settings Icon">
+        </div>
+      </div>
+
+      <div id="middleDiv">
+        <div id="leftMiddleDiv"><img id="minusImg" src="/images/minus.png" alt="Minus Sign Logo"></div>
+        <div id="timerDiv"><p id="timer">5:00</p></div>
+        <div id="rightMiddleDiv"><img id="plusImg" src="/images/plus.png" alt="Addition Sign Logo"></div>
+      </div>
+
+      <div id="bottomDiv">
+        <div id="progress">
+          <div id="progressDone" data-done="70">
+            
+          </div>
+        </div>
+        <div id="button-group">
+          <button id="start">Start Focus</button>
+          <button id="give-up">Give Up</button>
+          <button id="reset">Reset</button>
+          <button id="question">Are you sure want to give up?</button>
+          <button id="cancel-giveUp">Cancel</button>
+          <button id="yes-giveUp">Yes</button>
+        </div>
+      </div>
+    </div>
+
+    <script src="popup.js"></script>
+    <script src="progress.js"></script>
+  </body>
+</html>

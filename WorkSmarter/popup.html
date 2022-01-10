@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" href="main.css">
+    <link rel="stylesheet" href="button.css">
+  </head>
+  <body>
+    <!--Interface for Timer, Progress Bar, Start btn, Give Up Btn, Reset Btn. Interface broken into 3 divs-->
+    <div id="mainDiv">
+      <!--Top Div w/ 3 divs (displays logo)-->
+      <div id="topDiv">
+        <div id="leftTopDiv"></div>
+        <div id="centerTopDiv">
+          <img class="imgLogo" src="/images/white_logo_transparent_background.png" alt="Work Smart Logo">
+        </div>
+        <div id="rightTopDiv">
+        </div>
+      </div>
+      <!--End of Top Div-->
+      <!--Middle Div w/ 3 divs (displays Timer, plus and minus signs)-->
+      <div id="middleDiv">
+        <div id="leftMiddleDiv"><img id="minusImg" src="/images/minus.png" alt="Minus Sign Logo"></div>
+        <div id="timerDiv"><p id="timer"></p></div>
+        <div id="rightMiddleDiv"><img id="plusImg" src="/images/plus.png" alt="Addition Sign Logo"></div>
+      </div>
+      <!--End of Middle Div-->
+      <!--Bottom div (displays Progress Bar, Buttons)-->
+      <div id="bottomDiv">
+        <div id="progress">
+          <div id="progressDone" data-done="70">
+          </div>
+        </div>
+        <div id="button-group">
+          <button id="start">Start Focus</button>
+          <button id="give-up">Give Up</button>
+          <button id="reset">Reset</button>
+          <button id="question">Are you sure want to give up?</button>
+          <button id="cancel-giveUp">Cancel</button>
+          <button id="yes-giveUp">Yes</button>
+        </div>
+        <img id="expandImg" src="/images/expand.png" alt="expand">
+        <img class="hidden" id="collapseImg" src="/images/collapse.png" alt="expand">
+      </div>
+      <!--End of Bottom div-->
+    </div>
+    <!--End of Main interface-->
+
+    <!--This is the interface of the settings, where user can enter URLs to block while timer is on-->
+    <div class="hidden" id="settingsDiv">
+      <input type="text" class="form_input" placeholder="Enter website to block" id="site" required="">
+      <!---<label for="name" class="form_label">Enter website to block</label>--->
+      <button id="submit">Submit</button>
+      <div id="output">
+        <h2 class="titleLinks" id="header">Blocked Sites: 
+          <span class="hidden warningText" id="limitReached">LIMIT REACHED</span>
+          <span class="hidden warningText" id="alreadyExists">ALREADY EXISTS</span>
+          <span class="hidden warningText" id="incorrectFormat">INVALID URL INPUT</span>
+          <span class="hidden warningText" id="cantEdit">TIMER STARTED/CAN'T MAKE EDITS</span>
+        </h2>
+        <ul id="ListOfSites">
+        </ul>
+      </div>
+      <button id="clearAllURLS">Clear All</button>
+    </div>
+    <!--End of settings interface-->
+
+    <script src="jquery.js"></script>
+    <script src="popup.js"></script>
+    <script src="settings.js"></script>
+  </body>
+</html>

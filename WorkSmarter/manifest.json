@@ -1,0 +1,32 @@
+{
+  "name": "Work Smarter (Record)",
+  "description": "Work Smarter - Elimanate Distractions, Be Productive",
+  "version": "1.0",
+  "manifest_version": 3,
+  "background": {
+    "service_worker": "background.js"
+  },
+  "permissions": ["storage", "activeTab", "scripting", "tabs"],
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "/images/16.png",
+      "32": "/images/32.png",
+      "48": "/images/48x48.png",
+      "128": "/images/128.png"
+    }
+  },
+  "icons": {
+    "16": "/images/16.png",
+    "32": "/images/32.png",
+    "48": "/images/48x48.png",
+    "128": "/images/128.png"
+  },
+  "web_accessible_resources": [
+    {
+      "resources": ["contentscript.css", "images/neverGiveUp.png"],
+      "matches": ["<all_urls>"]
+    }
+  ],
+  "host_permissions": ["http://*/", "https://*/*"]
+}

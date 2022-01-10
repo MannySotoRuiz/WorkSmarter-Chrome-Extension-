@@ -1,0 +1,77 @@
+button {
+  height: 60px;
+  width: 30px;
+  outline: none;
+  /*margin: 10px;*/
+  margin: 0px 10px 10px 10px;
+  border: none;
+  border-radius: 2px;
+}
+
+button.current {
+  box-shadow: 0 0 0 2px white,
+              0 0 0 4px black;
+}
+
+.form_label {
+  font-family: 'Roboto', sans-serif;
+  font-size: 15px;
+  margin-top: 10px;
+  margin-left: 50px;
+  display: block;
+  transition: all 0.3s;
+  transform: translate(0rem);
+}
+
+.form_input {
+  margin-top: 30px;
+  font-family: 'Roboto', sans-serif;
+  color: #333;
+  margin: 0 auto;
+  padding: 15px 32px;
+  border-radius: 0.2rem;
+  background-color: rgb(255, 255, 255);
+  border: none;
+  width: 50%;
+  display: block;
+  border-bottom: 4.8px solid transparent;
+  transition: all 0.3s;
+}
+
+.form_input:placeholder-shown + .form_label {
+  opacity: 0;
+  visibility: hidden;
+  -webkit-transform: translateY(-4rem);
+  transform: translateY(-4rem);
+}
+
+ul {
+  list-style: none;
+  margin-left: 0px;
+}
+
+ul li::before {
+  content: "\1F512";
+  display: inline-block;
+  margin-left: 0px;
+  font-family: "Roboto", sans-serif;
+}
+
+#clearAllURLS {
+  height: 26px;
+  width: auto;
+  display: block;
+  float: right;
+  margin-top: 10px;
+  border-radius: 10%;
+}
+
+.warningText {
+  color: red;
+}
+
+.emojiDeleteURL {
+  float: right;
+  margin-right: 15px;
+  width: 8%;
+}

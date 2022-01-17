@@ -2,7 +2,7 @@ let startingMins = 5;
 let currentTime = startingMins * 60;
 let counter;
 let ifTimerOver = true;
-let originalURLs =[];
+let originalURLs = [];
 let blockedDomains = [];
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
@@ -40,14 +40,26 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   } else if (request.cmd === "DELETE_URL") {
     let del = request.link;
     deleteURL(del);
+  } else if (request.cmd === "CONTENT_SCRIPT_INIT") {
+    // is timer running
+    sendResponse({
+      time: currentTime,
+      isRunning: !ifTimerOver,
+    });
   }
+  return true;
 });
 
 function attemptInject(tab, tabId) {
   let testURL = new URL(tab.url);
+  // remove http:// https:// and www. from start of string
+  let testDomain = testURL.hostname.replace(/^(?:https?:\/\/)?(?:www\.)?/i, "");
   // if url is in the blocked domains list
-  console.log(blockedDomains, testURL.hostname);
-  if (blockedDomains.includes(testURL.hostname)) {
+  console.log("should inject block?", {
+    array: blockedDomains,
+    host: testDomain,
+  });
+  if (blockedDomains.includes(testDomain)) {
     console.log("execute content script");
     chrome.scripting.executeScript({
       files: ["contentscript.js"],
@@ -57,7 +69,6 @@ function attemptInject(tab, tabId) {
     console.log("blocked domain");
   }
 }
-
 
 // call this when URL of current tab is changed to see if contentscript.js needs to be injected or not
 try {
@@ -95,10 +106,14 @@ try {
 // }
 
 function displayBlockerUI() {
-  chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-    chrome.tabs.sendMessage(tabs[0].id, {isTimerOver: ifTimerOver}, function(response) {
-      console.log(response);
-    });
+  chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+    chrome.tabs.sendMessage(
+      tabs[0].id,
+      { isTimerOver: ifTimerOver },
+      function (response) {
+        console.log(response);
+      }
+    );
   });
 }
 
@@ -115,7 +130,7 @@ function getCurrentTab() {
 }
 
 function allTabs() {
-  chrome.tabs.query({}, function(tabs) {
+  chrome.tabs.query({}, function (tabs) {
     for (let i = 0; i < tabs.length; i++) {
       console.log(tabs[i].url);
       // if (ifValidURL(tabs[i].url)) {
@@ -158,7 +173,7 @@ function UpdateCountDown() {
   getCurrentTime();
   const mins = Math.floor(currentTime / 60);
   let secs = currentTime % 60;
-  console.log(`TotalSeconds - ${currentTime}`);
+  // console.log(`TotalSeconds - ${currentTime}`);
   if ((mins == 0) & (secs == 0)) {
     clearInterval(counter);
     ifTimerOver = true;
@@ -167,16 +182,17 @@ function UpdateCountDown() {
 
 function storeURL(userURL) {
   let url = new URL(userURL);
+  let testDomain = url.hostname.replace(/^(?:https?:\/\/)?(?:www\.)?/i, "");
   let check = false;
   for (let i = 0; i < blockedDomains.length; i++) {
-    if (blockedDomains[i] == url.hostname) {
+    if (blockedDomains[i] == testDomain) {
       check = true;
       break;
     }
   }
   if (!check) {
     originalURLs.push(userURL);
-    blockedDomains.push(url.hostname);
+    blockedDomains.push(testDomain);
     console.log("added url");
   }
 }
@@ -185,35 +201,35 @@ function deleteURL(deleteURL) {
   for (let i = 0; i < blockedDomains.length; i++) {
     let testDomain = blockedDomains[i];
     if (deleteURL.includes(testDomain)) {
-        blockedDomains.splice(i, 1);
-        break;
+      blockedDomains.splice(i, 1);
+      break;
     }
-}
+  }
 }
 
 function storeCurrrentTime() {
   chrome.storage.sync.set({ localTime: currentTime }, function () {
-    console.log("storeCurrentTime - " + currentTime);
+    // console.log("storeCurrentTime - " + currentTime);
   });
 }
 
 function getCurrentTime() {
   chrome.storage.sync.get(["localTime"], function (data) {
     currentTime = data.localTime;
-    console.log("getCurrentTime - " + data.localTime);
+    // console.log("getCurrentTime - " + data.localTime);
   });
 }
 
 function storeStartingMins() {
   chrome.storage.sync.set({ localStartingMins: startingMins }, function () {
-    console.log("storeStartingMins - " + startingMins);
+    // console.log("storeStartingMins - " + startingMins);
   });
 }
 
 function getStartingMins() {
   chrome.storage.sync.get(["localStartingMins"], function (data) {
     startingMins = data.localStartingMins;
-    console.log("getStartingMins - " + data.localStartingMins);
+    // console.log("getStartingMins - " + data.localStartingMins);
   });
 }
 
@@ -228,10 +244,10 @@ function clearLocalStorage() {
 
 function ifValidURL(site) {
   try {
-      const url = new URL(site);
-      return true;
+    const url = new URL(site);
+    return true;
   } catch (error) {
-      console.log('INVALID URL');
-      return false;
+    console.log("INVALID URL");
+    return false;
   }
 }

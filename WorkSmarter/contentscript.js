@@ -95,6 +95,9 @@ if (typeof quotesOnline === "undefined") {
       return false;
     }
 
+    // prevent scrolling
+    document.body.style.overflow = "hidden";
+
     console.log("block screen");
     // div for changing background
     const injectElement = document.createElement("div");
@@ -126,7 +129,6 @@ if (typeof quotesOnline === "undefined") {
     const timerDiv = document.createElement("div");
     timerDiv.classList = "blockContent";
     timerDiv.id = "timerDiv";
-    timerDiv.innerHTML = "5:00";
     document.body.appendChild(timerDiv);
 
     // div for giveUpBtn

@@ -35,8 +35,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   } else if (request.cmd === "GET_DATA") {
     sendResponse({ link: blockedDomains });
   } else if (request.cmd === "CLEAR_URLs") {
-    blockedDomains = [];
-    originalURLs = [];
+    clearAllURLs();
   } else if (request.cmd === "DELETE_URL") {
     let del = request.link;
     deleteURL(del);
@@ -97,14 +96,6 @@ try {
 
 ///////////////   FUNCTIONS    /////////////////////////
 
-// function stopContentTimer() {
-//   chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-//     chrome.tabs.sendMessage(tabs[0].id, {isTimerOver: ifTimerOver}, function(response) {
-//       console.log(response);
-//     });
-//   });
-// }
-
 function displayBlockerUI() {
   chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
     chrome.tabs.sendMessage(
@@ -129,32 +120,68 @@ function getCurrentTab() {
   });
 }
 
-function allTabs() {
-  chrome.tabs.query({}, function (tabs) {
+function reloadPage(userURL) {
+  let givenURL = new URL(userURL);
+  let givenDomain = givenURL.hostname.replace(/^(?:https?:\/\/)?(?:www\.)?/i, "");
+  console.log(givenDomain);
+  chrome.tabs.query({}, function(tabs) {
     for (let i = 0; i < tabs.length; i++) {
-      console.log(tabs[i].url);
-      // if (ifValidURL(tabs[i].url)) {
-      //   let tempURL = new URL(tabs[i]);
-      //   let tempDomain = tempURL.hostname;
-      //   console.log(tempDomain);
-      // } else {
-      //   console.log("NOT A VALID URL");
+      let temp = new URL(tabs[i].url);
+      let tempURL = temp.hostname.replace(/^(?:https?:\/\/)?(?:www\.)?/i, "");
+      if (tabs[i].active) {
+        if (givenDomain == tempURL && blockedDomains.includes(tempURL)) {
+          chrome.tabs.reload(tabs[i].id);
+        }
+      }
+      // let temp = new URL(tabs[i].url);
+      // let tempURL = temp.hostname.replace(/^(?:https?:\/\/)?(?:www\.)?/i, "");
+      // if (givenDomain == tempURL && blockedDomains.includes(tempURL)) {
+      //   console.log("Current page is part of blocked domains so refresh");
+      //   chrome.tabs.reload(tabs[i].id);
       // }
     }
   });
 }
 
+function timerEndedReloadPages() {
+  chrome.tabs.query({}, function(tabs){
+    for (let i = 0; i < tabs.length; i++) {
+      let temp = new URL(tabs[i].url);
+      let tempURL = temp.hostname.replace(/^(?:https?:\/\/)?(?:www\.)?/i, "");
+      if (blockedDomains.includes(tempURL)) {
+        chrome.tabs.reload(tabs[i].id);
+      }
+    }
+  });
+}
+
 function startTimer() {
-  counter = setInterval(UpdateCountDown, 1000);
-  ifTimerOver = false;
-  //allTabs();
-  displayBlockerUI();
+  chrome.tabs.query({}, function(tabs) {
+    counter = setInterval(UpdateCountDown, 1000);
+    ifTimerOver = false;
+    for (let i = 1; i < tabs.length; i++) {
+      console.log(tabs[i]);
+      // i decided to refresh the page if the current tab URL is part of the blocked domains
+      // this way it also satisfies if the user has a separate window opened and the active tab of that 
+      // separate window has a URL that is blocked. this would also refresh and have the blocker
+      // only if the current tab is active not on the inactive tabs since switching tabs is listened 
+      // with an event and that event will trigger the blocker if needed
+      if (tabs[i].active) {
+        let temp = new URL(tabs[i].url);
+        let tempURL = temp.hostname.replace(/^(?:https?:\/\/)?(?:www\.)?/i, "");
+        if (blockedDomains.includes(tempURL)) {
+          chrome.tabs.reload(tabs[i].id);
+        }
+      }
+    }
+  });
 }
 
 function stopTimer() {
   clearInterval(counter);
   ifTimerOver = true;
   counter = null;
+  timerEndedReloadPages();
 }
 
 function resetTime() {
@@ -173,10 +200,10 @@ function UpdateCountDown() {
   getCurrentTime();
   const mins = Math.floor(currentTime / 60);
   let secs = currentTime % 60;
-  // console.log(`TotalSeconds - ${currentTime}`);
   if ((mins == 0) & (secs == 0)) {
     clearInterval(counter);
     ifTimerOver = true;
+    timerEndedReloadPages();
   }
 }
 
@@ -194,17 +221,64 @@ function storeURL(userURL) {
     originalURLs.push(userURL);
     blockedDomains.push(testDomain);
     console.log("added url");
+    //allTabs(testDomain);
+    //reloadPage(userURL);
   }
 }
 
-function deleteURL(deleteURL) {
-  for (let i = 0; i < blockedDomains.length; i++) {
-    let testDomain = blockedDomains[i];
-    if (deleteURL.includes(testDomain)) {
-      blockedDomains.splice(i, 1);
-      break;
+function clearAllURLs() {
+
+  chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+    let temp = new URL(tabs[0].url);
+    let tempURL = temp.hostname.replace(/^(?:https?:\/\/)?(?:www\.)?/i, "");
+    if (blockedDomains.includes(tempURL)) {
+      console.log("Current page is part of blocked domains so refresh");
+      chrome.tabs.reload(tabs[0].id);
+    } else {
+      console.log("Current page URL is not part of blocked domains, do nothing");
     }
-  }
+
+    blockedDomains = [];
+    originalURLs = [];
+  });
+}
+
+function deleteURL(deleteURL) {
+  let splitData = deleteURL.split("<");
+
+  // when URL is deleted from User, we want to make sure that when the timer starts, the current tab URL is not
+  // blocked with our content script so we refresh the page to delete
+  chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+    let temp = new URL(tabs[0].url);
+    let tempURL = temp.hostname.replace(/^(?:https?:\/\/)?(?:www\.)?/i, "");
+    if ((tempURL == splitData[0]) && (blockedDomains.includes(tempURL))) {
+      console.log("Current page is part of blocked domains so refresh");
+      chrome.tabs.reload(tabs[0].id);
+    } else {
+      console.log("Current page URL is not part of blocked domains, do nothing");
+    }
+
+    for (let i = 0; i < blockedDomains.length; i++) {
+      let testDomain = blockedDomains[i];
+      if (deleteURL.includes(testDomain)) {
+        blockedDomains.splice(i, 1);
+        break;
+      }
+    }
+  });
+}
+
+function storeIfTimerStarted() {
+  chrome.storage.sync.set({ timerStatus: ifTimerOver }, function () {
+    console.log("ifTimerOver - " + ifTimerOver);
+  });
+}
+
+function getIfTimerStarted() {
+  chrome.storage.sync.get(["timerStatus"], function (data) {
+    ifTimerOver = data.timerStatus;
+    console.log(ifTimerOver);
+  });
 }
 
 function storeCurrrentTime() {
